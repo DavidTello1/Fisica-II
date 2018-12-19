@@ -12,6 +12,8 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModulePlayer.h"
+#include "PhysBody3D.h"
+
 
 class Application
 {

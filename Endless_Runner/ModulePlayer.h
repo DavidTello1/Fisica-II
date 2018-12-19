@@ -19,10 +19,14 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	vec3 GetPos();
+	void ReCalcPos(float move);
+
 public:
 
 	PhysVehicle3D* vehicle;
-	float turn;
-	float acceleration;
-	float brake;
+	vec3		   pos;
+	float		   turn;
+	float		   acceleration;
+	float		   brake;
 };

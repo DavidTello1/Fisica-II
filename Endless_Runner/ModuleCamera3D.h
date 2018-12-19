@@ -28,5 +28,6 @@ public:
 
 private:
 
+	bool locked;
 	mat4x4 ViewMatrix, ViewMatrixInverse;
 };

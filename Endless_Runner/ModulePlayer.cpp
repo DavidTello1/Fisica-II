@@ -97,7 +97,9 @@ bool ModulePlayer::Start()
 	car.wheels[3].steering = false;
 
 	vehicle = App->physics->AddVehicle(car);
-	vehicle->SetPos(0, 12, 10);
+	vehicle->SetPos(0, 0, 0);
+
+	pos = vec3(vehicle->info.chassis_offset.x, vehicle->info.chassis_offset.y + 5, vehicle->info.chassis_offset.z - 10);
 	
 	return true;
 }
@@ -108,6 +110,16 @@ bool ModulePlayer::CleanUp()
 	LOG("Unloading player");
 
 	return true;
+}
+
+vec3 ModulePlayer::GetPos()
+{
+	return pos;
+}
+
+void ModulePlayer::ReCalcPos(float move)
+{
+	pos.z += vehicle->GetKmh() / move;
 }
 
 // Update: draw background
@@ -142,6 +154,8 @@ update_status ModulePlayer::Update(float dt)
 	vehicle->Brake(brake);
 
 	vehicle->Render();
+
+	ReCalcPos(acceleration);
 
 	char title[80];
 	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
