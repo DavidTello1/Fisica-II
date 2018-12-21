@@ -5,6 +5,11 @@
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
 
+#include "SDL\include\SDL_opengl.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
+
+
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
 {
 	turn = acceleration = brake = 0.0f;
@@ -125,6 +130,9 @@ void ModulePlayer::ReCalcPos(float move)
 // Update: draw background
 update_status ModulePlayer::Update(float dt)
 {
+	//top viewport
+	glViewport(0, App->window->height / 2, App->window->width, App->window->height / 2);
+
 	turn = acceleration = brake = 0.0f;
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)

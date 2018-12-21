@@ -103,16 +103,31 @@ update_status ModuleCamera3D::Update(float dt)
 			Position = Reference + Z * length(Position);
 		}
 	}
-	else 
+	else //follow player
 	{
-		Position.x = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() - 10 * App->player->vehicle->vehicle->getForwardVector().getX();
-		Position.y = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getY() + 5 * App->player->vehicle->vehicle->getUpAxis();
-		Position.z = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() - 15 * App->player->vehicle->vehicle->getForwardVector().getZ();
 
-		float x = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() + 15 * App->player->vehicle->vehicle->getForwardVector().getX();
-		float z = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() + 15 * App->player->vehicle->vehicle->getForwardVector().getZ();
+		//if (player1_camera == true)
+		//{
+			Position.x = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() - 10 * App->player->vehicle->vehicle->getForwardVector().getX();
+			Position.y = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getY() + 10.5f * App->player->vehicle->vehicle->getUpAxis();
+			Position.z = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() - 12.5f * App->player->vehicle->vehicle->getForwardVector().getZ();
 
-		LookAt(vec3(x, 1, z));
+			float x = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() + 15 * App->player->vehicle->vehicle->getForwardVector().getX();
+			float z = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() + 15 * App->player->vehicle->vehicle->getForwardVector().getZ();
+
+			LookAt(vec3(x, 1, z));
+		//}
+		//else
+		//{
+		//	Position.x = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() - 10 * App->player->vehicle->vehicle->getForwardVector().getX();
+		//	Position.y = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getY() + 5 * App->player->vehicle->vehicle->getUpAxis();
+		//	Position.z = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() - 15 * App->player->vehicle->vehicle->getForwardVector().getZ();
+
+		//	float x = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() + 15 * App->player->vehicle->vehicle->getForwardVector().getX();
+		//	float z = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() + 15 * App->player->vehicle->vehicle->getForwardVector().getZ();
+
+		//	LookAt(vec3(x, 1, z));
+		//}
 		
 	}
 

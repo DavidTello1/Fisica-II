@@ -25,6 +25,7 @@ private:
 public:
 	
 	vec3 X, Y, Z, Position, Reference;
+	bool player1_camera;
 
 private:
 
