@@ -117,16 +117,6 @@ update_status ModulePhysics3D::Update(float dt)
 
 	if(debug == true)
 	{
-		world->debugDrawWorld();
-
-		// Render vehicles
-		p2List_item<PhysVehicle3D*>* item = vehicles.getFirst();
-		while(item)
-		{
-			item->data->Render();
-			item = item->next;
-		}
-
 		if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		{
 			Sphere s(1);

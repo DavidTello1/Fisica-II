@@ -2,7 +2,8 @@
 #include "glmath.h"
 #include "Bullet/include/btBulletDynamicsCommon.h"
 #include  "Application.h"
-#include "ModulePlayer.h"
+#include "ModulePlayer1.h"
+#include "ModulePlayer2.h"
 #include "Module.h"
 
 // =================================================

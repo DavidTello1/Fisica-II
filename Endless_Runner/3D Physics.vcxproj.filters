@@ -81,7 +81,10 @@
     <ClInclude Include="PhysVehicle3D.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="ModulePlayer.h">
+    <ClInclude Include="ModulePlayer1.h">
+      <Filter>Sources\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ModulePlayer2.h">
       <Filter>Sources\Modules\Game</Filter>
     </ClInclude>
   </ItemGroup>
@@ -137,7 +140,10 @@
     <ClCompile Include="PhysVehicle3D.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="ModulePlayer.cpp">
+    <ClCompile Include="ModulePlayer1.cpp">
+      <Filter>Sources\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulePlayer2.cpp">
       <Filter>Sources\Modules\Game</Filter>
     </ClCompile>
   </ItemGroup>

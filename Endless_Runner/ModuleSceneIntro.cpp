@@ -7,7 +7,7 @@
 #define SIZE_ARRAY(_A_) (sizeof(_A_)/sizeof(_A_[0]))
 
 // Circuit Def
-struct CubeDef 
+struct CubeDef
 {
 	float size_x, size_y, size_z;
 	float pos_x, pos_y, pos_z;
@@ -19,15 +19,15 @@ struct CubeDef
 	bool add_collision_listener = false;
 };
 
-CubeDef cube_defs[] = 
+CubeDef cube_defs[] =
 {
-	{ 25, 1, 100, 0, 0.5, 50, White, 0, true, -20, { 1, 0, 0 } },
+	{ 25, 1, 100, 0, 0.5, 50, White, 0, true, -20,{ 1, 0, 0 } },
 	{ 25, 3, 100, 0, 1, 30, White },
 	{ 25, 1, 40, 0, 17.6, 116.18, White },
-	{ 25, 1, 55, 15.8, 17.55, 147.5, White, 0, true, 45, { 0, 1, 0 } },
+	{ 25, 1, 55, 15.8, 17.55, 147.5, White, 0, true, 45,{ 0, 1, 0 } },
 	{ 25, 1, 90, 71.6, 17.6, 163.4, White, 0, true, 90,{ 0, 1, 0 } },
 	{ 25, 1, 90, 108, 17.6, 131, White },
-	{ 25, 1, 40, 108, 17.6, 100, White, 0, true, 20, { 1, 0, 0 }},
+	{ 25, 1, 40, 108, 17.6, 100, White, 0, true, 20,{ 1, 0, 0 } },
 	{ 25, 1, 90, 108, 5.5, 0, White },
 	{ 120, 3, 25, 47, 1, -32, White }
 };
@@ -75,21 +75,9 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	Plane p(0, 1, 0, 0);
-	p.axis = true;
-	p.color = Red;
-	p.Render();
-
-	p2List_item<Cube>* item = cubes.getFirst();
-	while (item)
-	{
-		item->data.Render();
-		item = item->next;
-	}
-
 	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
-{}
-
+{
+}

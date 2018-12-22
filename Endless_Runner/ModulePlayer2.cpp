@@ -1,25 +1,20 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModulePlayer.h"
+#include "ModulePlayer2.h"
 #include "Primitive.h"
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
 
-#include "SDL\include\SDL_opengl.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
-
-
-ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
+ModulePlayer2::ModulePlayer2(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
 {
 	turn = acceleration = brake = 0.0f;
 }
 
-ModulePlayer::~ModulePlayer()
+ModulePlayer2::~ModulePlayer2()
 {}
 
 // Load assets
-bool ModulePlayer::Start()
+bool ModulePlayer2::Start()
 {
 	LOG("Loading player");
 
@@ -110,49 +105,46 @@ bool ModulePlayer::Start()
 }
 
 // Unload assets
-bool ModulePlayer::CleanUp()
+bool ModulePlayer2::CleanUp()
 {
 	LOG("Unloading player");
 
 	return true;
 }
 
-vec3 ModulePlayer::GetPos()
+vec3 ModulePlayer2::GetPos()
 {
 	return pos;
 }
 
-void ModulePlayer::ReCalcPos(float move)
+void ModulePlayer2::ReCalcPos(float move)
 {
 	pos.z += vehicle->GetKmh() / move;
 }
 
 // Update: draw background
-update_status ModulePlayer::Update(float dt)
+update_status ModulePlayer2::Update(float dt)
 {
-	//top viewport
-	glViewport(0, App->window->height / 2, App->window->width, App->window->height / 2);
-
 	turn = acceleration = brake = 0.0f;
 
-	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 	{
 		acceleration = MAX_ACCELERATION;
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 	{
 		if(turn < TURN_DEGREES)
 			turn +=  TURN_DEGREES;
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 	{
 		if(turn > -TURN_DEGREES)
 			turn -= TURN_DEGREES;
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 	{
 		brake = BRAKE_POWER;
 	}
@@ -160,8 +152,6 @@ update_status ModulePlayer::Update(float dt)
 	vehicle->ApplyEngineForce(acceleration);
 	vehicle->Turn(turn);
 	vehicle->Brake(brake);
-
-	vehicle->Render();
 
 	ReCalcPos(acceleration);
 
@@ -171,6 +161,3 @@ update_status ModulePlayer::Update(float dt)
 
 	return UPDATE_CONTINUE;
 }
-
-
-

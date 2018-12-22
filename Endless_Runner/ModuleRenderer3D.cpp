@@ -2,6 +2,13 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "SDL\include\SDL_opengl.h"
+
+#include "ModulePlayer1.h"
+#include "ModulePlayer2.h"
+#include "PhysVehicle3D.h"
+#include "ModulePhysics3D.h"
+#include "ModuleSceneIntro.h"
+
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
@@ -105,18 +112,105 @@ bool ModuleRenderer3D::Init()
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+	Plane p(0, 1, 0, 0);
+	p.axis = true;
+	p.color = Red;
 
+	glClear(GL_COLOR_BUFFER_BIT |  GL_DEPTH_BUFFER_BIT);
+
+	//--------------------- top viewport ------------------------
+	glViewport(0, App->window->height / 2, App->window->width, App->window->height / 2);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	ProjectionMatrix = perspective(60.0f, (float)App->window->width / (App->window->height * 0.5f), 0.125f, 512.0f);
+	glLoadMatrixf(&ProjectionMatrix);
 	glMatrixMode(GL_MODELVIEW);
+
+	//position camera on player 1
+	App->camera->Position.x = App->player1->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() - 10 * App->player1->vehicle->vehicle->getForwardVector().getX();
+	App->camera->Position.y = App->player1->vehicle->vehicle->getChassisWorldTransform().getOrigin().getY() + 10.5f * App->player1->vehicle->vehicle->getUpAxis();
+	App->camera->Position.z = App->player1->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() - 12.5f * App->player1->vehicle->vehicle->getForwardVector().getZ();
+	float x = App->player1->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() + 15 * App->player1->vehicle->vehicle->getForwardVector().getX();
+	float z = App->player1->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() + 15 * App->player1->vehicle->vehicle->getForwardVector().getZ();
+	App->camera->LookAt(vec3(x, 1, z));
+	
+	App->camera->CalculateViewMatrix();
 	glLoadMatrixf(App->camera->GetViewMatrix());
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 
-	for(uint i = 0; i < MAX_LIGHTS; ++i)
+	p.Render(); //plane render
+
+	for (uint i = 0; i < MAX_LIGHTS; ++i) //lights render
 		lights[i].Render();
 
+	p2List_item<PhysVehicle3D*>* item = App->physics->vehicles.getFirst(); 	// Render vehicles
+	while (item)
+	{
+		item->data->Render();
+		item = item->next;
+	}
+
+	p2List_item<Cube>* item2 = App->scene_intro->cubes.getFirst(); // Render map
+	while (item2)
+	{
+		item2->data.Render();
+		item2 = item2->next;
+	}
+
+	if (App->physics->debug == true) //debug draw
+	{
+		App->physics->world->debugDrawWorld();
+	}
+
+	//--------------------- bottom viewport ------------------------
+	glViewport(0, 0, App->window->width, App->window->height / 2);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	ProjectionMatrix = perspective(60.0f, (float)App->window->width / (App->window->height * 0.5f), 0.125f, 512.0f);
+	glLoadMatrixf(&ProjectionMatrix);
+	glMatrixMode(GL_MODELVIEW);
+
+	//position camera on player 2
+	App->camera->Position.x = App->player2->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() - 10 * App->player2->vehicle->vehicle->getForwardVector().getX();
+	App->camera->Position.y = App->player2->vehicle->vehicle->getChassisWorldTransform().getOrigin().getY() + 10.5f * App->player2->vehicle->vehicle->getUpAxis();
+	App->camera->Position.z = App->player2->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() - 12.5f * App->player2->vehicle->vehicle->getForwardVector().getZ();
+	float x2 = App->player2->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() + 15 * App->player2->vehicle->vehicle->getForwardVector().getX();
+	float z2 = App->player2->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() + 15 * App->player2->vehicle->vehicle->getForwardVector().getZ();
+	App->camera->LookAt(vec3(x2, 1, z2));
+	
+	App->camera->CalculateViewMatrix();
+	glLoadMatrixf(App->camera->GetViewMatrix());
+
+	// light 0 on cam pos
+	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+
+	p.Render(); //plane render
+
+	for (uint i = 0; i < MAX_LIGHTS; ++i) //lights render
+		lights[i].Render();
+
+	item = App->physics->vehicles.getFirst(); 	// Render vehicles
+	while (item)
+	{
+		item->data->Render();
+		item = item->next;
+	}
+
+	item2 = App->scene_intro->cubes.getFirst(); // Render map
+	while (item2)
+	{
+		item2->data.Render();
+		item2 = item2->next;
+	}
+
+	if (App->physics->debug == true) //debug draw
+	{
+		App->physics->world->debugDrawWorld();
+	}
+
+	//---
 	return UPDATE_CONTINUE;
 }
 
@@ -148,7 +242,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
+	ProjectionMatrix = perspective(60.0f, (float)width / (height * 0.5f) , 0.125f, 512.0f);
 	glLoadMatrixf(&ProjectionMatrix);
 
 	glMatrixMode(GL_MODELVIEW);

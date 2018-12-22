@@ -18,17 +18,12 @@ public:
 	void Move(const vec3 &Movement);
 	float* GetViewMatrix();
 
-private:
-
-	void CalculateViewMatrix();
-
 public:
-	
+	void CalculateViewMatrix();
 	vec3 X, Y, Z, Position, Reference;
-	bool player1_camera;
-
+	
 private:
-
 	bool locked;
 	mat4x4 ViewMatrix, ViewMatrixInverse;
+
 };

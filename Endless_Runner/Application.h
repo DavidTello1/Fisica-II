@@ -11,7 +11,8 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
-#include "ModulePlayer.h"
+#include "ModulePlayer1.h"
+#include "ModulePlayer2.h"
 #include "PhysBody3D.h"
 
 
@@ -25,7 +26,8 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModulePhysics3D* physics;
-	ModulePlayer* player;
+	ModulePlayer1* player1;
+	ModulePlayer2* player2;
 
 private:
 
