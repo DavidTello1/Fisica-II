@@ -23,7 +23,6 @@ public:
 	vec3 X, Y, Z, Position, Reference;
 	
 private:
-	bool locked;
 	mat4x4 ViewMatrix, ViewMatrixInverse;
 
 };

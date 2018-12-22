@@ -130,10 +130,9 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	App->camera->Position.x = App->player1->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() - 10 * App->player1->vehicle->vehicle->getForwardVector().getX();
 	App->camera->Position.y = App->player1->vehicle->vehicle->getChassisWorldTransform().getOrigin().getY() + 10.5f * App->player1->vehicle->vehicle->getUpAxis();
 	App->camera->Position.z = App->player1->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() - 12.5f * App->player1->vehicle->vehicle->getForwardVector().getZ();
-	float x = App->player1->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() + 15 * App->player1->vehicle->vehicle->getForwardVector().getX();
-	float z = App->player1->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() + 15 * App->player1->vehicle->vehicle->getForwardVector().getZ();
+	float x = App->player1->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() + 30 * App->player1->vehicle->vehicle->getForwardVector().getX();
+	float z = App->player1->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() + 30 * App->player1->vehicle->vehicle->getForwardVector().getZ();
 	App->camera->LookAt(vec3(x, 1, z));
-	
 	App->camera->CalculateViewMatrix();
 	glLoadMatrixf(App->camera->GetViewMatrix());
 
@@ -176,10 +175,9 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	App->camera->Position.x = App->player2->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() - 10 * App->player2->vehicle->vehicle->getForwardVector().getX();
 	App->camera->Position.y = App->player2->vehicle->vehicle->getChassisWorldTransform().getOrigin().getY() + 10.5f * App->player2->vehicle->vehicle->getUpAxis();
 	App->camera->Position.z = App->player2->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() - 12.5f * App->player2->vehicle->vehicle->getForwardVector().getZ();
-	float x2 = App->player2->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() + 15 * App->player2->vehicle->vehicle->getForwardVector().getX();
-	float z2 = App->player2->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() + 15 * App->player2->vehicle->vehicle->getForwardVector().getZ();
+	float x2 = App->player2->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() + 30 * App->player2->vehicle->vehicle->getForwardVector().getX();
+	float z2 = App->player2->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() + 30 * App->player2->vehicle->vehicle->getForwardVector().getZ();
 	App->camera->LookAt(vec3(x2, 1, z2));
-	
 	App->camera->CalculateViewMatrix();
 	glLoadMatrixf(App->camera->GetViewMatrix());
 
