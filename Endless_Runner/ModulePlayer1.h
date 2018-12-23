@@ -17,10 +17,11 @@ public:
 
 	bool Start();
 	update_status Update(float dt);
+
+	void ResetVehicle(vec3 spawn);
 	bool CleanUp();
 
 	vec3 GetPos();
-	void ReCalcPos(float move);
 
 public:
 
@@ -29,4 +30,5 @@ public:
 	float		   turn;
 	float		   acceleration;
 	float		   brake;
+	bool		   first_load;
 };

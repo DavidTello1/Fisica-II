@@ -8,6 +8,7 @@
 ModulePlayer2::ModulePlayer2(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
 {
 	turn = acceleration = brake = 0.0f;
+	first_load = true;
 }
 
 ModulePlayer2::~ModulePlayer2()
@@ -117,11 +118,6 @@ vec3 ModulePlayer2::GetPos()
 	return pos;
 }
 
-void ModulePlayer2::ReCalcPos(float move)
-{
-	pos.z += vehicle->GetKmh() / move;
-}
-
 // Update: draw background
 update_status ModulePlayer2::Update(float dt)
 {
@@ -163,15 +159,71 @@ update_status ModulePlayer2::Update(float dt)
 		}
 	}
 
+	p2List_item<Cube>* item = App->scene_intro->cubes.getFirst();
+	btVector3 position = vehicle->vehicle->getChassisWorldTransform().getOrigin();
+	vec3 last_block;
+	vec3 respawn;
+
+	while (item != NULL)
+	{
+		last_block.x = item->data.transform.M[12];
+		last_block.y = item->data.transform.M[13];
+		last_block.z = item->data.transform.M[14];
+
+		bool isonX = (last_block.x - item->data.size.x / 2 < position.getX() && last_block.x + item->data.size.x / 2 > position.getX());
+		bool isonZ = (last_block.z - item->data.size.z / 2 < position.getZ() && last_block.z + item->data.size.z / 2 > position.getZ());
+
+		if (isonX && isonZ)
+		{
+			respawn.x = last_block.x;
+			respawn.y = last_block.y + 5;
+			respawn.z = last_block.z;
+
+			LOG("RESPAWN 2 : X%f  ,  Y%f  ,  Z%f  ;", respawn.x, respawn.y, respawn.z);
+
+			break;
+		}
+
+		item = item->next;
+	}
+
+	//LOG("CAR 2 : %f", position.getY());
+
+	if ((position.getY() < 0.5f && !first_load) || App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+	{
+		ResetVehicle(respawn);
+	}
+
 	vehicle->ApplyEngineForce(acceleration);
 	vehicle->Turn(turn);
 	vehicle->Brake(brake);
 
-	ReCalcPos(acceleration);
+	//ReCalcPos(acceleration);
 
 	char title[80];
-	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
+	sprintf_s(title, "Complete 3 Laps to WIN");
 	App->window->SetTitle(title);
 
+	first_load = false;
+
 	return UPDATE_CONTINUE;
+}
+
+void ModulePlayer2::ResetVehicle(vec3 spawn)
+{
+	float transformReset[16];
+
+	for (int i = 0; i < 16; ++i)
+	{
+		transformReset[i] = 0;
+	}
+	transformReset[0] = 1;
+	transformReset[5] = 1;
+	transformReset[10] = 1;
+	vehicle->SetTransform(transformReset);
+
+	vehicle->vehicle->getRigidBody()->setLinearVelocity({ 0,0,0, });
+	vehicle->vehicle->getRigidBody()->setAngularVelocity({ 0,0,0 });
+	vehicle->SetPos(spawn.x, spawn.y, spawn.z);
+
 }
