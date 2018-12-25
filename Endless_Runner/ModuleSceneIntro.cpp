@@ -3,6 +3,7 @@
 #include "ModuleSceneIntro.h"
 #include "Primitive.h"
 #include "PhysBody3D.h"
+#include "PhysVehicle3D.h"
 
 #define SIZE_ARRAY(_A_) (sizeof(_A_)/sizeof(_A_[0]))
 
@@ -60,6 +61,8 @@ bool ModuleSceneIntro::Start()
 		cubes.add(c);
 	}
 
+	CreateLapSensor(0, 0, -10, 30, 20, 0.1f, LapSensor);
+	CreateLapSensor(110, 20, 100, 30, 20, 0.1f, HalfLap);
 
 	return ret;
 }
@@ -75,9 +78,93 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+	if (App->player1->win == true)
+	{
+		char title[80];
+		sprintf_s(title, "PLAYER 1 WINS    *Press Space to Start a New Game*");
+		App->window->SetTitle(title);
+	}
+	else if (App->player2->win == true)
+	{
+		char title[80];
+		sprintf_s(title, "PLAYER 2 WINS    *Press Space to Start a New Game*");
+		App->window->SetTitle(title);
+	}
+	else
+	{
+		char title[80];
+		sprintf_s(title, "Player 1: %d/3 || Player 2: %d/3", App->player1->laps, App->player2->laps);
+		App->window->SetTitle(title);
+	}
+
+	if (abs(App->player1->vehicle->GetPos().getZ() - App->player2->vehicle->GetPos().getZ()) < 1
+		&& abs(App->player1->vehicle->GetPos().getX() - App->player2->vehicle->GetPos().getX()) < 30)
+	{
+		if (App->player1->vehicle->GetKmh() > App->player2->vehicle->GetKmh()
+			&& App->player1->laps == App->player2->laps)
+		{
+			App->player1->first = true;
+			App->player2->first = false;
+		}
+		else if (App->player2->vehicle->GetKmh() > App->player1->vehicle->GetKmh()
+			&& App->player1->laps == App->player2->laps)
+		{
+			App->player1->first = false;
+			App->player2->first = true;
+		}
+	}
 	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
+	if (body1->type == HalfLap)
+	{
+		if (body2->type == Car1 && App->player1->half_lap == false)
+		{
+			App->player1->half_lap = true;
+		}
+		else if (body2->type == Car2 && App->player2->half_lap == false)
+		{
+			App->player2->half_lap = true;
+		}
+	}
+
+	else if (body1->type == LapSensor)
+	{
+		if (body2->type == Car1)
+		{
+			if (App->player1->laps < 3 && App->player1->half_lap == true)
+			{
+				App->player1->laps++;
+				App->player1->half_lap = false;
+			}
+			else if (App->player1->laps == 3 && App->player1->half_lap == true)
+			{
+				App->player1->win = true;
+			}
+		}
+		else if (body2->type == Car2)
+		{
+			if (App->player2->laps < 3 && App->player2->half_lap == true)
+			{
+				App->player2->laps++;
+				App->player2->half_lap = false;
+			}
+			else if (App->player2->laps == 3 && App->player2->half_lap == true)
+			{
+				App->player2->win = true;
+			}
+		}
+	}
+}
+
+void ModuleSceneIntro::CreateLapSensor(float x, float y, float z, float i, float j, float k, SensorType type)
+{
+	Cube ret(i,j,k);
+	ret.SetPos(x, y, z);
+
+	PhysBody3D* pbody = App->physics->AddBody(ret, 0, type);
+	pbody->SetSensor();
+	pbody->collision_listeners.add(this);
 }

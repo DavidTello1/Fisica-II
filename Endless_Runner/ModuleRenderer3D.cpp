@@ -114,7 +114,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	Plane p(0, 1, 0, 0);
 	p.axis = true;
-	p.color = Red;
 
 	glClear(GL_COLOR_BUFFER_BIT |  GL_DEPTH_BUFFER_BIT);
 
@@ -139,7 +138,15 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 
-	p.Render(); //plane render
+	if (App->player1->first == true) //plane color and render
+	{
+		p.color = Green;
+	}
+	else
+	{
+		p.color = Red;
+	}
+	p.Render();
 
 	for (uint i = 0; i < MAX_LIGHTS; ++i) //lights render
 		lights[i].Render();
@@ -184,7 +191,15 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 
-	p.Render(); //plane render
+	if (App->player2->first == true) //plane color and render
+	{
+		p.color = Green;
+	}
+	else
+	{
+		p.color = Red;
+	}
+	p.Render();
 
 	for (uint i = 0; i < MAX_LIGHTS; ++i) //lights render
 		lights[i].Render();

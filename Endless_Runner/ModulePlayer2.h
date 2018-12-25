@@ -21,14 +21,16 @@ public:
 	void ResetVehicle(vec3 spawn);
 	bool CleanUp();
 
-	vec3 GetPos();
-
 public:
 
-	PhysVehicle3D* vehicle;
-	vec3		   pos;
-	float		   turn;
-	float		   acceleration;
-	float		   brake;
-	bool		   first_load;
+	PhysVehicle3D*	vehicle;
+	float			turn;
+	float			acceleration;
+	float			brake;
+
+	bool			first_load;
+	bool			first;
+	bool			win;
+	bool			half_lap;
+	uint			laps;
 };

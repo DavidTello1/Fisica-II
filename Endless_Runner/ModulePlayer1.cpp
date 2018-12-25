@@ -1,14 +1,19 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModulePlayer1.h"
+#include "ModulePlayer2.h"
 #include "Primitive.h"
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
+
 
 ModulePlayer1::ModulePlayer1(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
 {
 	turn = acceleration = brake = 0.0f;
 	first_load = true;
+	first = false;
+	laps = 1;
+	half_lap = false;
 }
 
 ModulePlayer1::~ModulePlayer1()
@@ -99,8 +104,7 @@ bool ModulePlayer1::Start()
 
 	vehicle = App->physics->AddVehicle(car);
 	vehicle->SetPos(0, 0, 0);
-
-	pos = vec3(vehicle->info.chassis_offset.x, vehicle->info.chassis_offset.y + 5, vehicle->info.chassis_offset.z - 10);
+	vehicle->type = Car1;
 	
 	return true;
 }
@@ -113,12 +117,6 @@ bool ModulePlayer1::CleanUp()
 	return true;
 }
 
-vec3 ModulePlayer1::GetPos()
-{
-	return pos;
-}
-
-// Update: draw background
 update_status ModulePlayer1::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
@@ -186,8 +184,6 @@ update_status ModulePlayer1::Update(float dt)
 		item = item->next;
 	}
 
-	//LOG("CAR 1 : %f", position.getY());
-
 	if ((position.getY() < 0.5f && !first_load) || App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 	{
 		ResetVehicle(respawn);
@@ -196,13 +192,6 @@ update_status ModulePlayer1::Update(float dt)
 	vehicle->ApplyEngineForce(acceleration);
 	vehicle->Turn(turn);
 	vehicle->Brake(brake);
-
-	//ReCalcPos(acceleration);
-
-	char title[80];
-	sprintf_s(title, "Complete 3 Laps to WIN");
-	App->window->SetTitle(title);
-
 	first_load = false;
 
 	return UPDATE_CONTINUE;

@@ -1,10 +1,6 @@
 #include "PhysBody3D.h"
 #include "glmath.h"
 #include "Bullet/include/btBulletDynamicsCommon.h"
-#include  "Application.h"
-#include "ModulePlayer1.h"
-#include "ModulePlayer2.h"
-#include "Module.h"
 
 // =================================================
 PhysBody3D::PhysBody3D(btRigidBody* body) : body(body)
@@ -52,4 +48,27 @@ void PhysBody3D::SetPos(float x, float y, float z)
 	body->setWorldTransform(t);
 }
 
+btVector3 PhysBody3D::GetPos() const
+{
+	btTransform t = body->getWorldTransform();
+	return t.getOrigin();
+}
 
+void PhysBody3D::SetSensor() const
+{
+	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+}
+
+void PhysBody3D::SetRotation(btQuaternion rotation) const {
+
+	btTransform t = body->getWorldTransform();
+	t.setRotation(rotation);
+	body->setWorldTransform(t);
+}
+
+btQuaternion PhysBody3D::GetRotation() const {
+
+	btTransform t = body->getWorldTransform();
+
+	return t.getRotation();
+}
