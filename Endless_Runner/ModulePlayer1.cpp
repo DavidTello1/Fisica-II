@@ -108,12 +108,9 @@ bool ModulePlayer1::Start()
 
 	respawn_pos = vehicle->GetPos();
 	respawn_rot = vehicle->GetRotation();
-<<<<<<< HEAD
 
 	initial_pos = respawn_pos;
 	initial_rot = respawn_rot;
-=======
->>>>>>> 7d10ce2cf27dfe608a7f547c5a0c39c11569812b
 	
 	return true;
 }
@@ -179,11 +176,7 @@ update_status ModulePlayer1::Update(float dt)
 	}
 	btVector3 position = vehicle->vehicle->getChassisWorldTransform().getOrigin();
 
-<<<<<<< HEAD
 	if ((position.getY() < 1.0f && !first_load) || App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-=======
-	if ((position.getY() < 1.0f && !first_load) || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_DOWN)
->>>>>>> 7d10ce2cf27dfe608a7f547c5a0c39c11569812b
 	{
 		ResetVehicle(respawn_pos, respawn_rot);
 	}

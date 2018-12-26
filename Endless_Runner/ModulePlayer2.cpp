@@ -130,7 +130,6 @@ update_status ModulePlayer2::Update(float dt)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
 		{
-<<<<<<< HEAD
 			ResetVehicle(initial_pos, initial_rot);
 			this->win = false;
 			this->laps = 0;
@@ -173,77 +172,21 @@ update_status ModulePlayer2::Update(float dt)
 				acceleration = -MAX_ACCELERATION;
 			}
 		}
-
-		btVector3 position = vehicle->vehicle->getChassisWorldTransform().getOrigin();
-
-		if ((position.getY() < 1.0f && !first_load) || App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-		{
-			ResetVehicle(respawn_pos, respawn_rot);
-		}
-
-		vehicle->ApplyEngineForce(acceleration);
-		vehicle->Turn(turn);
-		vehicle->Brake(brake);
-
-		first_load = false;
 	}
-=======
 
-		}
-	}
-	else
+	btVector3 position = vehicle->vehicle->getChassisWorldTransform().getOrigin();
+
+	if ((position.getY() < 1.0f && !first_load) || App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-		{
-			if (vehicle->GetKmh() < 0)
-			{
-				brake = BRAKE_POWER;
-			}
-			else
-			{
-				acceleration = MAX_ACCELERATION;
-			}
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-		{
-			if (turn < TURN_DEGREES)
-				turn += TURN_DEGREES;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-		{
-			if (turn > -TURN_DEGREES)
-				turn -= TURN_DEGREES;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-		{
-			if (vehicle->GetKmh() > 0)
-			{
-				brake = BRAKE_POWER;
-			}
-			else
-			{
-				acceleration = -MAX_ACCELERATION;
-			}
-		}
-
-		btVector3 position = vehicle->vehicle->getChassisWorldTransform().getOrigin();
-
-		if ((position.getY() < 1.0f && !first_load) || App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-		{
-			ResetVehicle(respawn_pos, respawn_rot);
-		}
-
-		vehicle->ApplyEngineForce(acceleration);
-		vehicle->Turn(turn);
-		vehicle->Brake(brake);
-
-		first_load = false;
+		ResetVehicle(respawn_pos, respawn_rot);
 	}
 
->>>>>>> 7d10ce2cf27dfe608a7f547c5a0c39c11569812b
+	vehicle->ApplyEngineForce(acceleration);
+	vehicle->Turn(turn);
+	vehicle->Brake(brake);
+
+	first_load = false;
+
 	return UPDATE_CONTINUE;
 }
 
