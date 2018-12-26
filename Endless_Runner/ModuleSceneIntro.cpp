@@ -24,6 +24,7 @@ CubeDef cube_defs[] =
 {
 	{ 12, 1, 100, 0, 0.5, 50, White, 0, true, -20,{ 1, 0, 0 } },
 	{ 25, 3, 100, 0, 1, 30, White },
+	{ 25, 3, 5, 0, 1, -10, Black },
 	{ 25, 1, 40, 0, 17.6, 116.18, White },
 	{ 25, 1, 55, 15.8, 17.55, 147.5, White, 0, true, 45,{ 0, 1, 0 } },
 	{ 25, 1, 90, 71.6, 17.6, 163.4, White, 0, true, 90,{ 0, 1, 0 } },
@@ -52,17 +53,22 @@ bool ModuleSceneIntro::Start()
 		Cube c;
 		c.size.Set(cube_defs[i].size_x, cube_defs[i].size_y, cube_defs[i].size_z);
 		c.SetPos(cube_defs[i].pos_x, cube_defs[i].pos_y, cube_defs[i].pos_z);
+
 		c.color = cube_defs[i]._color;
+
 		if (cube_defs[i]._rotate)
 			c.SetRotation(cube_defs[i]._angle, cube_defs[i]._axis);
+
+		CreateSensor(cube_defs[i].pos_x, cube_defs[i].pos_y + 5, cube_defs[i].pos_z, 30, 20, 0.1f, Respawn, cube_defs[i]._angle, cube_defs[i]._axis);
+
 		PhysBody3D *p = App->physics->AddBody(c, cube_defs[i]._mass);
 		if (cube_defs[i].add_collision_listener)
 			p->collision_listeners.add(this);
 		cubes.add(c);
 	}
 
-	CreateLapSensor(0, 0, -10, 30, 20, 0.1f, LapSensor);
-	CreateLapSensor(110, 20, 100, 30, 20, 0.1f, HalfLap);
+	CreateSensor(0, 0, -10, 30, 20, 0.1f, LapSensor);
+	CreateSensor(110, 20, 100, 30, 20, 0.1f, HalfLap);
 
 	return ret;
 }
@@ -157,14 +163,45 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 			}
 		}
 	}
+
+	else if (body1->type == Respawn)
+	{
+		p2List_item<PhysBody3D*>* item = respawns.getFirst();
+
+		while (item != nullptr)
+		{
+			if (body2->type == Car1)
+			{
+				if (body1->GetPos() == item->data->GetPos())
+				{
+					App->player1->respawn_pos = item->data->GetPos();
+				}
+			}
+			if (body2->type == Car2)
+			{				
+				if (body1->GetPos() == item->data->GetPos())
+				{
+					App->player2->respawn_pos = item->data->GetPos();
+				}				
+			}			
+			item = item->next;
+		}
+	}
 }
 
-void ModuleSceneIntro::CreateLapSensor(float x, float y, float z, float i, float j, float k, SensorType type)
+void ModuleSceneIntro::CreateSensor(float x, float y, float z, float i, float j, float k, SensorType type, float rot, vec3 axis)
 {
 	Cube ret(i,j,k);
 	ret.SetPos(x, y, z);
 
+	ret.SetRotation(rot, axis);
+
 	PhysBody3D* pbody = App->physics->AddBody(ret, 0, type);
 	pbody->SetSensor();
 	pbody->collision_listeners.add(this);
+
+	if (type == Respawn)
+	{		
+		respawns.add(pbody);
+	}
 }

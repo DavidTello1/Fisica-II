@@ -13,7 +13,8 @@ enum SensorType {
 	LapSensor,
 	HalfLap,
 	Car1,
-	Car2
+	Car2,
+	Respawn
 };
 
 // =================================================

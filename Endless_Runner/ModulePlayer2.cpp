@@ -156,37 +156,11 @@ update_status ModulePlayer2::Update(float dt)
 		}
 	}
 
-	p2List_item<Cube>* item = App->scene_intro->cubes.getFirst();
 	btVector3 position = vehicle->vehicle->getChassisWorldTransform().getOrigin();
-	vec3 last_block;
-	vec3 respawn;
-
-	while (item != NULL)
-	{
-		last_block.x = item->data.transform.M[12];
-		last_block.y = item->data.transform.M[13];
-		last_block.z = item->data.transform.M[14];
-
-		bool isonX = (last_block.x - item->data.size.x / 2 < position.getX() && last_block.x + item->data.size.x / 2 > position.getX());
-		bool isonZ = (last_block.z - item->data.size.z / 2 < position.getZ() && last_block.z + item->data.size.z / 2 > position.getZ());
-
-		if (isonX && isonZ)
-		{
-			respawn.x = last_block.x;
-			respawn.y = last_block.y + 5;
-			respawn.z = last_block.z;
-
-			LOG("RESPAWN 2 : X%f  ,  Y%f  ,  Z%f  ;", respawn.x, respawn.y, respawn.z);
-
-			break;
-		}
-
-		item = item->next;
-	}
 
 	if ((position.getY() < 0.5f && !first_load) || App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 	{
-		ResetVehicle(respawn);
+		ResetVehicle(respawn_pos);
 	}
 
 	vehicle->ApplyEngineForce(acceleration);
@@ -197,7 +171,7 @@ update_status ModulePlayer2::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModulePlayer2::ResetVehicle(vec3 spawn)
+void ModulePlayer2::ResetVehicle(btVector3 spawn)
 {
 	float transformReset[16];
 
@@ -212,5 +186,5 @@ void ModulePlayer2::ResetVehicle(vec3 spawn)
 
 	vehicle->vehicle->getRigidBody()->setLinearVelocity({ 0,0,0, });
 	vehicle->vehicle->getRigidBody()->setAngularVelocity({ 0,0,0 });
-	vehicle->SetPos(spawn.x, spawn.y, spawn.z);
+	vehicle->SetPos(spawn.x(), spawn.y(), spawn.z());
 }

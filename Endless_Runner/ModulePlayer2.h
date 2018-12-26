@@ -18,7 +18,7 @@ public:
 	bool Start();
 	update_status Update(float dt);
 
-	void ResetVehicle(vec3 spawn);
+	void ResetVehicle(btVector3 spawn);
 	bool CleanUp();
 
 public:
@@ -27,6 +27,8 @@ public:
 	float			turn;
 	float			acceleration;
 	float			brake;
+
+	btVector3		respawn_pos;
 
 	bool			first_load;
 	bool			first;
