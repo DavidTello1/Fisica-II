@@ -5,7 +5,10 @@ Gameplay
 
 This is a basic multiplayer racing game, developed to be played in splited screen,
 where you have to compete against another friend to be the first in completing 3
-laps in a very difficult track.
+laps in a very difficult track, the world will notify you if you are first or not 
+switching its colour from Red (if you are second) to Green (if you are first).
+
+Player 1 is placed at up screen and Player 2 at down screen.
 
 Two players competing for the win, everything is 
 permitted... Just win!
