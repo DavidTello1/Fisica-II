@@ -2,6 +2,7 @@
 #define __ModuleAudio_H__
 
 #include "Module.h"
+#include "p2SString.h"
 #include "SDL_mixer\include\SDL_mixer.h"
 
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
@@ -24,6 +25,10 @@ public:
 
 	// Play a previously loaded WAV
 	bool PlayFx(unsigned int fx, int repeat = 0);
+
+public:
+
+	p2List<p2SString>   tracks_path;
 
 private:
 

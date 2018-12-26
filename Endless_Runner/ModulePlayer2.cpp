@@ -133,6 +133,9 @@ update_status ModulePlayer2::Update(float dt)
 			ResetVehicle(initial_pos, initial_rot);
 			this->win = false;
 			this->laps = 0;
+
+			App->scene_intro->current_track = App->audio->tracks_path.getFirst();
+			App->audio->PlayMusic(App->scene_intro->current_track->data.GetString());
 		}
 	}
 	else

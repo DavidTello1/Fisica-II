@@ -41,6 +41,15 @@ bool ModuleAudio::Init()
 		ret = false;
 	}
 
+	p2SString game_track;
+	p2SString win_track;
+
+	game_track.create("music/gameTrack.ogg");
+	win_track.create("music/winTrack.ogg");
+
+	tracks_path.add(game_track);
+	tracks_path.add(win_track);
+
 	return ret;
 }
 
