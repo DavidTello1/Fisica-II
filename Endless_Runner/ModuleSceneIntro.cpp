@@ -26,8 +26,9 @@ struct CubeDef
 CubeDef cube_defs[] =
 {
 	{ 12, 1, 100, 0, 0.5, 50, White, false, 0, true, -20,{ 1, 0, 0 } },
-	{ 25, 3, 100, 0, 1, 30, White },
-	//{ 25, 3, 5, 0, 1, -10, Black },
+	{ 25, 3, 5, 0, 1, -10, Black, false },
+	{ 25,  3, 75, 0, 1, 30, White },
+	{ 25,  3, 15, 0, 1, -20, White },
 	{ 25, 1, 40, 0, 17.6, 116.18, White },
 	{ 25, 1, 55, 15.8, 17.55, 147.5, White, true, 0, true, 45,{ 0, 1, 0 }, 45, { 0, 1, 0}},
 	{ 25, 1, 90, 71.6, 17.6, 163.4, White, true, 0, true, 90,{ 0, 1, 0 }, 90 ,{ 0, 1, 0}},
@@ -71,7 +72,7 @@ bool ModuleSceneIntro::Start()
 		cubes.add(c);
 	}
 
-	CreateSensor(0, 0, -10, 30, 20, 0.1f, LapSensor);
+	CreateSensor(0, 0, -8, 30, 20, 0.1f, LapSensor);
 	CreateSensor(0, 0, 10, 30, 20, 0.1f, HalfLap);
 
 	return ret;
