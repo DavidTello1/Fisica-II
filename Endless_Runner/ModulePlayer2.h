@@ -37,4 +37,5 @@ public:
 	bool			win;
 	bool			half_lap;
 	uint			laps;
+	int				respawn_num;
 };

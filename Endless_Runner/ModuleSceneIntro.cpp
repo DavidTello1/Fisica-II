@@ -25,17 +25,17 @@ struct CubeDef
 
 CubeDef cube_defs[] =
 {
-	{ 12, 1, 100, 0, 0.5, 50, White, false, 0, true, -20,{ 1, 0, 0 } },
-	{ 25, 3, 5, 0, 1, -10, Black, false },
 	{ 25,  3, 75, 0, 1, 30, White },
-	{ 25,  3, 15, 0, 1, -20, White },
+	{ 12, 1, 100, 0, 0.5, 50, White, false, 0, true, -20,{ 1, 0, 0 } },
 	{ 25, 1, 40, 0, 17.6, 116.18, White },
-	{ 25, 1, 55, 15.8, 17.55, 147.5, White, true, 0, true, 45,{ 0, 1, 0 }, 45, { 0, 1, 0}},
-	{ 25, 1, 90, 71.6, 17.6, 163.4, White, true, 0, true, 90,{ 0, 1, 0 }, 90 ,{ 0, 1, 0}},
-	{ 25, 1, 90, 108, 17.6, 131, White, true, 0, false, 0, { 0, 1, 0 }, 180, { 0, 1, 0}},
-	{ 25, 1, 40, 108, 17.6, 100, White, false, 0, true, 20,{ 1, 0, 0 }, 180,{ 0, 1, 0 }},
-	{ 25, 1, 90, 108, 5.5, 0, White, true, 0, false, 0, { 0, 0, 0}, 180, { 0, 1, 0}},
-	{ 120, 3, 25, 47, 1, -32, White, true, 0, false, 0, { 0, 0, 0}, 270, { 0, 1, 0}}
+	{ 25, 1, 55, 15.8, 17.55, 147.5, White, true, 0, true, 45,{ 0, 1, 0 }, 45,{ 0, 1, 0 } },
+	{ 25, 1, 90, 71.6, 17.6, 163.4, White, true, 0, true, 90,{ 0, 1, 0 }, 90 ,{ 0, 1, 0 } },
+	{ 25, 1, 90, 108, 17.6, 131, White, true, 0, false, 0,{ 0, 1, 0 }, 180,{ 0, 1, 0 } },
+	{ 25, 1, 40, 108, 17.6, 100, White, false, 0, true, 20,{ 1, 0, 0 }, 180,{ 0, 1, 0 } },
+	{ 25, 1, 90, 108, 5.5, 0, White, true, 0, false, 0,{ 0, 0, 0 }, 180,{ 0, 1, 0 } },
+	{ 120, 3, 25, 47, 1, -32, White, true, 0, false, 0,{ 0, 0, 0 }, 270,{ 0, 1, 0 } },
+	{ 25,  3, 15, 0, 1, -20, White },
+	{ 25, 3, 5, 0, 1, -10, Black, false }
 };
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -97,7 +97,7 @@ update_status ModuleSceneIntro::Update(float dt)
 		char title[80];
 		sprintf_s(title, "PLAYER 1 WINS    *Press Space to Start a New Game*");
 		App->window->SetTitle(title);
-
+	
 		current_track = App->audio->tracks_path.getLast();
 		App->audio->PlayMusic(current_track->data.GetString());
 	}
@@ -106,7 +106,7 @@ update_status ModuleSceneIntro::Update(float dt)
 		char title[80];
 		sprintf_s(title, "PLAYER 2 WINS    *Press Space to Start a New Game*");
 		App->window->SetTitle(title);
-
+	
 		current_track = App->audio->tracks_path.getLast();
 		App->audio->PlayMusic(current_track->data.GetString());
 	}
@@ -115,6 +115,17 @@ update_status ModuleSceneIntro::Update(float dt)
 		char title[80];
 		sprintf_s(title, "Player 1: %d/3 || Player 2: %d/3", App->player1->laps, App->player2->laps);
 		App->window->SetTitle(title);
+	}
+
+	if (App->player1->respawn_num < App->player2->respawn_num)
+	{
+		App->player1->first = false;
+		App->player2->first = true;
+	}
+	else if (App->player1->respawn_num > App->player2->respawn_num)
+	{
+		App->player1->first = true;
+		App->player2->first = false;
 	}
 
 	if (abs(App->player1->vehicle->GetPos().getZ() - App->player2->vehicle->GetPos().getZ()) < 1
@@ -133,6 +144,7 @@ update_status ModuleSceneIntro::Update(float dt)
 			App->player2->first = true;
 		}
 	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -182,7 +194,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	{
 		p2List_item<PhysBody3D*>* item = respawns.getFirst();
 
-		while (item != nullptr)
+		for (int i = 0; item != nullptr; item = item->next)
 		{
 			if (body2->type == Car1)
 			{
@@ -190,24 +202,26 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 				{
 					App->player1->respawn_pos = item->data->GetPos();
 					App->player1->respawn_rot = item->data->GetRotation();
+					App->player1->respawn_num = i;
 				}
 			}
 			if (body2->type == Car2)
-			{				
+			{
 				if (body1->GetPos() == item->data->GetPos())
 				{
 					App->player2->respawn_pos = item->data->GetPos();
 					App->player2->respawn_rot = item->data->GetRotation();
+					App->player2->respawn_num = i;
 				}
-			}			
-			item = item->next;
+			}
+			i++;
 		}
 	}
 }
 
 void ModuleSceneIntro::CreateSensor(float x, float y, float z, float i, float j, float k, SensorType type, float rot, vec3 axis)
 {
-	Cube ret(i,j,k);
+	Cube ret(i, j, k);
 	ret.SetPos(x, y, z);
 
 	if (rot != 0.0f)
@@ -218,7 +232,7 @@ void ModuleSceneIntro::CreateSensor(float x, float y, float z, float i, float j,
 	pbody->collision_listeners.add(this);
 
 	if (type == Respawn)
-	{		
+	{
 		respawns.add(pbody);
 	}
 }
