@@ -13,25 +13,28 @@ struct CubeDef
 	float size_x, size_y, size_z;
 	float pos_x, pos_y, pos_z;
 	Color _color;
+	bool has_respawn = true;
 	float _mass = 0;
 	bool _rotate = false;
 	float _angle = 0;
 	const vec3 _axis = { 0, 0, 0 };
+	float sensor_rot = 0;
+	const vec3 sensor_axis = { 0,0,0 };
 	bool add_collision_listener = false;
 };
 
 CubeDef cube_defs[] =
 {
-	{ 12, 1, 100, 0, 0.5, 50, White, 0, true, -20,{ 1, 0, 0 } },
+	{ 12, 1, 100, 0, 0.5, 50, White, false, 0, true, -20,{ 1, 0, 0 } },
 	{ 25, 3, 100, 0, 1, 30, White },
-	{ 25, 3, 5, 0, 1, -10, Black },
+	//{ 25, 3, 5, 0, 1, -10, Black },
 	{ 25, 1, 40, 0, 17.6, 116.18, White },
-	{ 25, 1, 55, 15.8, 17.55, 147.5, White, 0, true, 45,{ 0, 1, 0 } },
-	{ 25, 1, 90, 71.6, 17.6, 163.4, White, 0, true, 90,{ 0, 1, 0 } },
-	{ 25, 1, 90, 108, 17.6, 131, White },
-	{ 25, 1, 40, 108, 17.6, 100, White, 0, true, 20,{ 1, 0, 0 } },
-	{ 25, 1, 90, 108, 5.5, 0, White },
-	{ 120, 3, 25, 47, 1, -32, White }
+	{ 25, 1, 55, 15.8, 17.55, 147.5, White, true, 0, true, 45,{ 0, 1, 0 }, 45, { 0, 1, 0}},
+	{ 25, 1, 90, 71.6, 17.6, 163.4, White, true, 0, true, 90,{ 0, 1, 0 }, 90 ,{ 0, 1, 0}},
+	{ 25, 1, 90, 108, 17.6, 131, White, true, 0, false, 0, { 0, 1, 0 }, 180, { 0, 1, 0}},
+	{ 25, 1, 40, 108, 17.6, 100, White, false, 0, true, 20,{ 1, 0, 0 }, 180,{ 0, 1, 0 }},
+	{ 25, 1, 90, 108, 5.5, 0, White, true, 0, false, 0, { 0, 0, 0}, 180, { 0, 1, 0}},
+	{ 120, 3, 25, 47, 1, -32, White, true, 0, false, 0, { 0, 0, 0}, 270, { 0, 1, 0}}
 };
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -59,7 +62,8 @@ bool ModuleSceneIntro::Start()
 		if (cube_defs[i]._rotate)
 			c.SetRotation(cube_defs[i]._angle, cube_defs[i]._axis);
 
-		CreateSensor(cube_defs[i].pos_x, cube_defs[i].pos_y + 5, cube_defs[i].pos_z, 30, 20, 0.1f, Respawn, cube_defs[i]._angle, cube_defs[i]._axis);
+		if (cube_defs[i].has_respawn == true)
+			CreateSensor(cube_defs[i].pos_x, cube_defs[i].pos_y + 5, cube_defs[i].pos_z, 30, 20, 0.1f, Respawn, cube_defs[i].sensor_rot, cube_defs[i].sensor_axis);
 
 		PhysBody3D *p = App->physics->AddBody(c, cube_defs[i]._mass);
 		if (cube_defs[i].add_collision_listener)
@@ -68,7 +72,7 @@ bool ModuleSceneIntro::Start()
 	}
 
 	CreateSensor(0, 0, -10, 30, 20, 0.1f, LapSensor);
-	CreateSensor(110, 20, 100, 30, 20, 0.1f, HalfLap);
+	CreateSensor(0, 0, 10, 30, 20, 0.1f, HalfLap);
 
 	return ret;
 }
@@ -175,6 +179,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 				if (body1->GetPos() == item->data->GetPos())
 				{
 					App->player1->respawn_pos = item->data->GetPos();
+					App->player1->respawn_rot = item->data->GetRotation();
 				}
 			}
 			if (body2->type == Car2)
@@ -182,7 +187,8 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 				if (body1->GetPos() == item->data->GetPos())
 				{
 					App->player2->respawn_pos = item->data->GetPos();
-				}				
+					App->player2->respawn_rot = item->data->GetRotation();
+				}
 			}			
 			item = item->next;
 		}
@@ -194,7 +200,8 @@ void ModuleSceneIntro::CreateSensor(float x, float y, float z, float i, float j,
 	Cube ret(i,j,k);
 	ret.SetPos(x, y, z);
 
-	ret.SetRotation(rot, axis);
+	if (rot != 0.0f)
+		ret.SetRotation(rot, axis);
 
 	PhysBody3D* pbody = App->physics->AddBody(ret, 0, type);
 	pbody->SetSensor();

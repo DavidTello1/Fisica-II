@@ -23,7 +23,7 @@ public:
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
 	void CreateSensor(float x, float y, float z, float i, float j, float k, SensorType type, float rot = 0.0f, vec3 axis = { 0,0,0 });
-
+	
 public:
 
 	PhysBody3D* pb_chassis;
