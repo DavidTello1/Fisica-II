@@ -10,6 +10,7 @@ laps in a very difficult track.
 Two players competing for the win, everything is 
 permitted... Just win!
 
+***
 
 Controls
 ========
