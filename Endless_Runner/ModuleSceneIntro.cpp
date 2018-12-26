@@ -68,7 +68,7 @@ bool ModuleSceneIntro::Start()
 	}
 
 	CreateSensor(0, 0, -10, 30, 20, 0.1f, LapSensor);
-	CreateSensor(0, 0, 10, 30, 20, 0.1f, HalfLap);
+	CreateSensor(110, 20, 100, 30, 20, 0.1f, HalfLap);
 
 	return ret;
 }
@@ -175,7 +175,6 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 				if (body1->GetPos() == item->data->GetPos())
 				{
 					App->player1->respawn_pos = item->data->GetPos();
-					App->player1->respawn_rot = item->data->GetRotation();
 				}
 			}
 			if (body2->type == Car2)
@@ -183,8 +182,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 				if (body1->GetPos() == item->data->GetPos())
 				{
 					App->player2->respawn_pos = item->data->GetPos();
-					App->player2->respawn_rot = item->data->GetRotation();
-				}
+				}				
 			}			
 			item = item->next;
 		}

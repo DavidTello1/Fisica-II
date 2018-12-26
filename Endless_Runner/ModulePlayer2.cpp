@@ -104,9 +104,6 @@ bool ModulePlayer2::Start()
 	vehicle = App->physics->AddVehicle(car);
 	vehicle->SetPos(0, 0, 0);
 	vehicle->type = Car2;
-
-	respawn_pos = vehicle->GetPos();
-	respawn_rot = vehicle->GetRotation();
 	
 	return true;
 }
@@ -123,69 +120,58 @@ update_status ModulePlayer2::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
 
-	if (win == true || App->player1->win == true)
+	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+		if (vehicle->GetKmh() < 0)
 		{
-
+			brake = BRAKE_POWER;
+		}
+		else
+		{
+			acceleration = MAX_ACCELERATION;
 		}
 	}
-	else
+
+	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-		{
-			if (vehicle->GetKmh() < 0)
-			{
-				brake = BRAKE_POWER;
-			}
-			else
-			{
-				acceleration = MAX_ACCELERATION;
-			}
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-		{
-			if (turn < TURN_DEGREES)
-				turn += TURN_DEGREES;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-		{
-			if (turn > -TURN_DEGREES)
-				turn -= TURN_DEGREES;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-		{
-			if (vehicle->GetKmh() > 0)
-			{
-				brake = BRAKE_POWER;
-			}
-			else
-			{
-				acceleration = -MAX_ACCELERATION;
-			}
-		}
-
-		btVector3 position = vehicle->vehicle->getChassisWorldTransform().getOrigin();
-
-		if ((position.getY() < 1.0f && !first_load) || App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-		{
-			ResetVehicle(respawn_pos, respawn_rot);
-		}
-
-		vehicle->ApplyEngineForce(acceleration);
-		vehicle->Turn(turn);
-		vehicle->Brake(brake);
-
-		first_load = false;
+		if(turn < TURN_DEGREES)
+			turn +=  TURN_DEGREES;
 	}
 
+	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+	{
+		if(turn > -TURN_DEGREES)
+			turn -= TURN_DEGREES;
+	}
+
+	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+	{
+		if (vehicle->GetKmh() > 0)
+		{
+			brake = BRAKE_POWER;
+		}
+		else
+		{
+			acceleration = -MAX_ACCELERATION;
+		}
+	}
+
+	btVector3 position = vehicle->vehicle->getChassisWorldTransform().getOrigin();
+
+	if ((position.getY() < 0.5f && !first_load) || App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+	{
+		ResetVehicle(respawn_pos);
+	}
+
+	vehicle->ApplyEngineForce(acceleration);
+	vehicle->Turn(turn);
+	vehicle->Brake(brake);
+
+	first_load = false;
 	return UPDATE_CONTINUE;
 }
 
-void ModulePlayer2::ResetVehicle(btVector3 spawn, btQuaternion rotation)
+void ModulePlayer2::ResetVehicle(btVector3 spawn)
 {
 	float transformReset[16];
 
@@ -201,5 +187,4 @@ void ModulePlayer2::ResetVehicle(btVector3 spawn, btQuaternion rotation)
 	vehicle->vehicle->getRigidBody()->setLinearVelocity({ 0,0,0, });
 	vehicle->vehicle->getRigidBody()->setAngularVelocity({ 0,0,0 });
 	vehicle->SetPos(spawn.x(), spawn.y(), spawn.z());
-	vehicle->SetRotation(rotation);
 }

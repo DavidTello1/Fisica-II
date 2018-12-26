@@ -18,7 +18,7 @@ public:
 	bool Start();
 	update_status Update(float dt);
 
-	void ResetVehicle(btVector3 spawn, btQuaternion rotation);
+	void ResetVehicle(btVector3 spawn);
 	bool CleanUp();
 
 public:
@@ -29,7 +29,6 @@ public:
 	float			brake;
 
 	btVector3		respawn_pos;
-	btQuaternion	respawn_rot;
 
 	bool			first_load;
 	bool			first;
