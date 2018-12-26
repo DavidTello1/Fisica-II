@@ -18,32 +18,32 @@ Controls
 Player 1
 --------
 
-Up Arrow --> Accelerate / Break (while reversing)
+Up Arrow ---> Accelerate / Break (while reversing)
 
-Down Arrow --> Reverse / Break (while accelerating)
+Down Arrow ---> Reverse / Break (while accelerating)
 
-Left Arrow --> Turn left
+Left Arrow ---> Turn left
 
-Right Arrow --> Turn right
+Right Arrow ---> Turn right
 
-Right Shift --> Manual Respawn
+Right Shift ---> Manual Respawn
 
-Space --> Restart the game when somebody wins
+Space ---> Restart the game when somebody wins
 
 Player 2
 --------
 
-W --> Accelerate / Break (while reversing)
+W ---> Accelerate / Break (while reversing)
 
-S --> Reverse / Break (while accelerating)
+S ---> Reverse / Break (while accelerating)
 
-A --> Turn left
+A ---> Turn left
 
-D --> Turn right
+D ---> Turn right
 
-R --> Manual Respawn
+R ---> Manual Respawn
 
-Space --> Restart the game when somebody wins
+Space ---> Restart the game when somebody wins
 
 ***
 
