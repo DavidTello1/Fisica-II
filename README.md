@@ -1,7 +1,4 @@
-
-Game developed by David Tello Panea and Oriol SabatÈ SolÈ
-
-[source code](https://github.com/DavidTello1/Fisica-II)
+[Link to the source code](https://github.com/DavidTello1/Fisica-II)
 
 Gameplay
 ========
@@ -30,3 +27,7 @@ Right Shift --> Manual Respawn (Player 1)
 R --> Manual Respawn(Player 2)
 
 Space --> Restart the game when somebody wins
+
+***
+
+Game developed by David Tello Panea and Oriol Sabat√© Sol√©
