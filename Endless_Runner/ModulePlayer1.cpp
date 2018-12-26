@@ -14,6 +14,7 @@ ModulePlayer1::ModulePlayer1(Application* app, bool start_enabled) : Module(app,
 	first = false;
 	laps = 1;
 	half_lap = false;
+	respawn_num = 0;
 }
 
 ModulePlayer1::~ModulePlayer1()
@@ -135,8 +136,9 @@ update_status ModulePlayer1::Update(float dt)
 			vehicle->SetRotation(initial_rot);
 			win = false;
 			laps = 1;
+			App->scene_intro->first_iteration = true;
 
-      App->scene_intro->current_track = App->audio->tracks_path.getFirst();
+			App->scene_intro->current_track = App->audio->tracks_path.getFirst();
 			App->audio->PlayMusic(App->scene_intro->current_track->data.GetString());
 		}
 	}

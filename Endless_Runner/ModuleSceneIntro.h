@@ -43,4 +43,6 @@ public:
 	p2List<PhysBody3D*> respawns;
 
 	p2List_item<p2SString>* current_track;
+
+	bool first_iteration;
 };
