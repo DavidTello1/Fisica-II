@@ -75,6 +75,9 @@ bool ModuleSceneIntro::Start()
 	CreateSensor(0, 0, -8, 30, 20, 0.1f, LapSensor);
 	CreateSensor(0, 0, 10, 30, 20, 0.1f, HalfLap);
 
+	current_track = App->audio->tracks_path.getFirst();
+	App->audio->PlayMusic(current_track->data.GetString());
+
 	return ret;
 }
 
@@ -94,12 +97,18 @@ update_status ModuleSceneIntro::Update(float dt)
 		char title[80];
 		sprintf_s(title, "PLAYER 1 WINS    *Press Space to Start a New Game*");
 		App->window->SetTitle(title);
+
+		current_track = App->audio->tracks_path.getLast();
+		App->audio->PlayMusic(current_track->data.GetString());
 	}
 	else if (App->player2->win == true)
 	{
 		char title[80];
 		sprintf_s(title, "PLAYER 2 WINS    *Press Space to Start a New Game*");
 		App->window->SetTitle(title);
+
+		current_track = App->audio->tracks_path.getLast();
+		App->audio->PlayMusic(current_track->data.GetString());
 	}
 	else
 	{
