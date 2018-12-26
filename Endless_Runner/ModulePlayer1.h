@@ -30,8 +30,6 @@ public:
 
 	btVector3		respawn_pos;
 	btQuaternion	respawn_rot;
-
-	btVector3		initial_pos;
 	btQuaternion	initial_rot;
 
 	bool			first_load;

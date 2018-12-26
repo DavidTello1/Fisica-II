@@ -103,13 +103,12 @@ bool ModulePlayer1::Start()
 	car.wheels[3].steering = false;
 
 	vehicle = App->physics->AddVehicle(car);
-	vehicle->SetPos(0, 0, 0);
+	vehicle->SetPos(1, 0, 0);
 	vehicle->type = Car1;
 
 	respawn_pos = vehicle->GetPos();
 	respawn_rot = vehicle->GetRotation();
 
-	initial_pos = respawn_pos;
 	initial_rot = respawn_rot;
 	
 	return true;
@@ -129,13 +128,15 @@ update_status ModulePlayer1::Update(float dt)
 
 	if (win == true || App->player2->win == true)
 	{
+		vehicle->Brake(BRAKE_POWER);
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
 		{
-			ResetVehicle(initial_pos, initial_rot);
-			this->win = false;
-			this->laps = 0;
+			vehicle->SetPos(1, 0, 0);
+			vehicle->SetRotation(initial_rot);
+			win = false;
+			laps = 1;
 
-			App->scene_intro->current_track = App->audio->tracks_path.getFirst();
+      App->scene_intro->current_track = App->audio->tracks_path.getFirst();
 			App->audio->PlayMusic(App->scene_intro->current_track->data.GetString());
 		}
 	}
@@ -176,18 +177,19 @@ update_status ModulePlayer1::Update(float dt)
 				acceleration = -MAX_ACCELERATION;
 			}
 		}
-	}
-	btVector3 position = vehicle->vehicle->getChassisWorldTransform().getOrigin();
 
-	if ((position.getY() < 1.0f && !first_load) || App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-	{
-		ResetVehicle(respawn_pos, respawn_rot);
-	}
+		btVector3 position = vehicle->vehicle->getChassisWorldTransform().getOrigin();
 
-	vehicle->ApplyEngineForce(acceleration);
-	vehicle->Turn(turn);
-	vehicle->Brake(brake);
-	first_load = false;
+		if ((position.getY() < 1.0f && !first_load) || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_DOWN)
+		{
+			ResetVehicle(respawn_pos, respawn_rot);
+		}
+
+		vehicle->ApplyEngineForce(acceleration);
+		vehicle->Turn(turn);
+		vehicle->Brake(brake);
+		first_load = false;
+	}
 
 	return UPDATE_CONTINUE;
 }
