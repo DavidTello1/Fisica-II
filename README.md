@@ -15,6 +15,24 @@ permitted... Just win!
 Controls
 ========
 
+Player 1
+--------
+
+Up Arrow --> Accelerate / Break (while reversing)
+
+Down Arrow --> Reverse / Break (while accelerating)
+
+Left Arrow --> Turn left
+
+Right Arrow --> Turn right
+
+Right Shift --> Manual Respawn
+
+Space --> Restart the game when somebody wins
+
+Player 2
+--------
+
 W --> Accelerate / Break (while reversing)
 
 S --> Reverse / Break (while accelerating)
@@ -23,9 +41,7 @@ A --> Turn left
 
 D --> Turn right
 
-Right Shift --> Manual Respawn (Player 1)
-
-R --> Manual Respawn(Player 2)
+R --> Manual Respawn
 
 Space --> Restart the game when somebody wins
 
