@@ -25,6 +25,8 @@ struct CubeDef
 
 CubeDef cube_defs[] =
 {
+	{ 25,  3, 15, 0, 1, -20, White },
+	{ 25, 3, 5, 0, 1, -10, Black, false },
 	{ 25,  3, 75, 0, 1, 30, White },
 	{ 12, 1, 100, 0, 0.5, 50, White, false, 0, true, -20,{ 1, 0, 0 } },
 	{ 25, 1, 40, 0, 17.6, 116.18, White },
@@ -33,9 +35,7 @@ CubeDef cube_defs[] =
 	{ 25, 1, 90, 108, 17.6, 131, White, true, 0, false, 0,{ 0, 1, 0 }, 180,{ 0, 1, 0 } },
 	{ 25, 1, 40, 108, 17.6, 100, White, false, 0, true, 20,{ 1, 0, 0 }, 180,{ 0, 1, 0 } },
 	{ 25, 1, 90, 108, 5.5, 0, White, true, 0, false, 0,{ 0, 0, 0 }, 180,{ 0, 1, 0 } },
-	{ 120, 3, 25, 47, 1, -32, White, true, 0, false, 0,{ 0, 0, 0 }, 270,{ 0, 1, 0 } },
-	{ 25,  3, 15, 0, 1, -20, White },
-	{ 25, 3, 5, 0, 1, -10, Black, false }
+	{ 120, 3, 25, 47, 1, -32, White, true, 0, false, 0,{ 0, 0, 0 }, 270,{ 0, 1, 0 } }
 };
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -119,28 +119,28 @@ update_status ModuleSceneIntro::Update(float dt)
 		App->window->SetTitle(title);
 	}
 
-	if (App->player1->respawn_num < App->player2->respawn_num)
-	{
-		App->player1->first = false;
-		App->player2->first = true;
-	}
-	else if (App->player1->respawn_num > App->player2->respawn_num)
+	if (App->player1->respawn_num > App->player2->respawn_num && App->player1->laps >= App->player2->laps)
 	{
 		App->player1->first = true;
 		App->player2->first = false;
+	}
+	if (App->player2->respawn_num > App->player1->respawn_num && App->player2->laps >= App->player1->laps)
+	{
+		App->player1->first = false;
+		App->player2->first = true;
 	}
 
 	if (abs(App->player1->vehicle->GetPos().getZ() - App->player2->vehicle->GetPos().getZ()) < 1
 		&& abs(App->player1->vehicle->GetPos().getX() - App->player2->vehicle->GetPos().getX()) < 30)
 	{
 		if (App->player1->vehicle->GetKmh() > App->player2->vehicle->GetKmh()
-			&& App->player1->laps == App->player2->laps)
+			&& App->player1->laps >= App->player2->laps)
 		{
 			App->player1->first = true;
 			App->player2->first = false;
 		}
 		else if (App->player2->vehicle->GetKmh() > App->player1->vehicle->GetKmh()
-			&& App->player1->laps == App->player2->laps)
+			&& App->player2->laps >= App->player1->laps)
 		{
 			App->player1->first = false;
 			App->player2->first = true;
